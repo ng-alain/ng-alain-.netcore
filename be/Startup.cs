@@ -51,6 +51,7 @@ namespace asdf
             else
             {
                 app.UseHsts();
+				app.UseHttpsRedirection();
             }
 
             app.Use(async (context, next) =>
@@ -79,7 +80,6 @@ namespace asdf
                 await next();
             });
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
