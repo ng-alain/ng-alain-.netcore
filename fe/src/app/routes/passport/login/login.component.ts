@@ -102,13 +102,16 @@ export class UserLoginComponent implements OnDestroy {
     }
     // mock http
     this.loading = true;
-    this.http.get('passport/1').subscribe((res: any) => {
+    this.http.post('passport/login', {
+      email: 'cipchk@qq.com',
+      password: 'wodemima'
+    }).subscribe((res: any) => {
       this.loading = false;
       // 清空路由复用信息
       this.reuseTabService.clear();
       // 设置Token信息
       this.tokenService.set({
-        token: res.data,
+        token: res.data.token,
       });
       // 重新获取 StartupService 内容，若其包括 User 有关的信息的话
       this.startupSrv.load().then(() => this.router.navigate(['/']));

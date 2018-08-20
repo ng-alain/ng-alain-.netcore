@@ -96,7 +96,7 @@ app.Use(async (context, next) => {
     if (context.Request.Headers.TryGetValue("token", out var tokens) && tokens.Count > 0) {
       _token = tokens[0];
     }
-    if (_token != "asdf") {
+    if (_token != "123456789") {
       context.Response.StatusCode = 401;
       return ;
     }
@@ -158,12 +158,21 @@ services.AddMvc(options => {
 [ApiController]
 public class PassportController : ControllerBase
 {
-  [HttpGet("{id}")]
-  public JsonResult Get(int id)
-  {
-    if (id != 1) throw new Exception("无效用户");
-    return new JsonResult(new { msg = "ok", data = "asdf" });
-  }
+	[HttpPost("login")]
+	public JsonResult Login(LoginRequest req)
+	{
+	    if (req.email == "cipchk@qq.com" && req.password == "wodemima")
+	    {
+		return Output(new LoginResponse
+		{
+		    token = "123456789",
+		    username = "cipchk",
+		    email = req.email,
+		    avatar = "https://ng-alain.com/assets/img/logo-color.svg"
+		});
+	    }
+	    throw new Exception("无效用户");
+	}
 }
 ```
 
@@ -242,13 +251,16 @@ load(): Promise<any> {
 ```ts
 // mock http
 this.loading = true;
-this.http.get('passport/1').subscribe((res: any) => {
+this.http.post('passport/login', {
+  email: 'cipchk@qq.com',
+  password: 'wodemima'
+}).subscribe((res: any) => {
   this.loading = false;
   // 清空路由复用信息
   this.reuseTabService.clear();
   // 设置Token信息
   this.tokenService.set({
-    token: res.data,
+    token: res.data.token,
   });
   // 重新获取 StartupService 内容，若其包括 User 有关的信息的话
   this.startupSrv.load().then(() => this.router.navigate(['/']));

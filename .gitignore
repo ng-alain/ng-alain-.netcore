@@ -1,3 +1,6 @@
+# IDE
+.vs
+
 /dist
 /be/bin
 /be/obj
